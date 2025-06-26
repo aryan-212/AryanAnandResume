@@ -1,0 +1,29 @@
+name: Build and Deploy LaTeX Resume
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Compile LaTeX to PDF
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: AryanAnandResume.tex
+
+      - name: Copy PDF to docs/
+        run: |
+          mkdir -p docs
+          mv AryanAnandResume.pdf docs/
+
+      - name: Push to same repo (docs folder)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Add built PDF"
+          file_pattern: docs/*.pdf
